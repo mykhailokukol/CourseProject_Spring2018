@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Регистрация</title>
+  </head>
+  {% include 'public/header.html' %}
+  <body>
+    <div class="content">
+      <h2>Добро пожаловать на страницу регистрации!</h2>
+      <h4>Заполните все поля своими реальными данными:</h4>
+      <div class="signup_form">
+        <form action="{% url 'signing up page' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <input type="submit" name="" value="Зарегестрироваться">
+        </form>
+      </div>
+      <div class="messages-container">
+        <ul class="messages">
+          {% for message in messages %}
+          <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+            {% autoescape off %}
+            {{ message }}
+            {% endautoescape %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

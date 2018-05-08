@@ -1,0 +1,25 @@
+{% load staticfiles %}
+{% include 'public/fonts.html' %}
+<link rel="stylesheet" href="{% static 'css/common.css' %}">
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+<header>
+  <div class="header-div">
+    <a id="a_main" href="/home/"><strong>Главная</strong></a>
+    <a href="/profile/">Профиль</a>
+    <a href="/control/">Управление</a>
+    <a href="/tasks/">Задачи КП</a>
+    <div class="header-right">
+      {% if user.is_authenticated %}
+        <a href="/login/">Выйти</a>
+        <div class="auth-text">
+          Вы авторизованы{% if user.get_full_name %} как {{ user.get_full_name }} {% endif %}
+        </div>
+      {% else %}
+        <a href="/login/">Войти</a>
+        <div class="auth-text">
+          Вы не авторизованы. Пройдите аутентификацию
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</header>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Авторизация</title>
+  </head>
+  {% include 'public/header.html' %}
+  <body>
+    <div class="content">
+      <h2>Добро пожаловать!</h2>
+      <h3>Введите данные для входа:</h3>
+      <div class="login_form">
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <input type="submit" name="" value="Войти">
+        </form>
+      </div>
+      <div class="messages-container">
+        <ul class="messages">
+          {% for message in messages %}
+          <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+            {% autoescape off %}
+            {{ message }}
+            {% endautoescape %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

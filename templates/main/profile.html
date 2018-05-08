@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Профиль</title>
+    {% include 'public/fonts.html' %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+  </head>
+  {% include 'public/header.html' %}
+  <body>
+    <div class="content">
+      {% if user.is_authenticated %}
+      <div class="info-and-tables">
+        <div class="information">
+          <div class="photo-info">
+            <img src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" alt="">
+            <h5>Зарегестрирован: {{ user.date_joined }}</h5>
+          </div>
+          <div class="main-info">
+            <h2>{{ user.first_name }}
+               {% for prof in profile %} {% if user_id == prof.user_id %} {{ prof.patronymic }} {% endif %} {% endfor %}
+               {{ user.last_name }}</h2>
+            <p><strong>Номер ВУ:</strong> {{ user.username }}</p>
+            <p><strong>email:</strong> {{ user.email }}</p>
+            <p><strong>Дата рождения:</strong>{% for prof in profile %} {% if user_id == prof.user_id %} {{ prof.birthday }} {% endif %} {% endfor %} </p>
+            <a href="settings/">Настройки профиля</a>
+          </div>
+        </div>
+        <div class="vio-and-acc">
+          <table>
+            <thead>
+              <th colspan="5">ДТП, в которых Вы участвовали</th>
+            </thead>
+            <tr>
+              <td>Тип ДТП</td>
+              <td>Дата и время</td>
+              <td>Улица</td>
+              <td>Дом</td>
+              <td></td>
+            </tr>
+            {% for ac in accidents_query %}
+            <tr>
+              <td>{% for a in accidents %} {% if ac.type == a.type %} {{ a.type }} {% endif %} {% endfor %}</td>
+              <td>{{ ac.datetime }}</td>
+              <td>{{ ac.street }}</td>
+              <td>{{ ac.house }}</td>
+              <td><a href="">Обзор</a></td>
+            </tr>
+            {% endfor %}
+          </table>
+          <table>
+            <thead>
+              <th colspan="5">Ваши нарушения ПДД</th>
+            </thead>
+            <tr>
+              <td>Тип нарушения</td>
+              <td>Дата и время</td>
+              <td>Улица</td>
+              <td>Дом</td>
+              <td></td>
+            </tr>
+            {% for vio in vio_query %}
+            <tr>
+              <td>{% for v in vio_types %} {% if vio.violation_id == v.id %} {{ v.type }} {% endif %} {% endfor %}</td>
+              <td>{{ vio.datetime }}</td>
+              <td>{{ vio.street }}</td>
+              <td>{{ vio.house }}</td>
+              <td><a href="">Обзор</a></td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+      <div class="my-cars">
+        <h3>Ваши автомобили:</h3>
+        <div class="cars-list">
+          <table>
+            <thead>
+              <th>Марка</th>
+              <th>Модель</th>
+              <th>Мощность (л.с.)</th>
+              <th>Объем двигателя (л)</th>
+              <th>Тип кузова</th>
+              <th>Год выпуска</th>
+              <th>Номер</th>
+              <th></th>
+            </thead>
+            {% for car in my_cars %}
+            <tr>
+              <td>{{ car.mark }}</td>
+              <td>{{ car.model }}</td>
+              <td>{{ car.power }}</td>
+              <td>{{ car.engine_capacity }}</td>
+              <td>{{ car.body_type }}</td>
+              <td>{{ car.year }}</td>
+              <td>{{ car.lecinse_plate }}</td>
+              <td><a href="#">Подробнее</a></td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+      {% else %}
+        <div class="non-auth">
+          <h1>Вы не авторизованы.</h1>
+        </div>
+      {% endif %}
+    </div>
+  </body>
+</html>

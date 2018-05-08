@@ -1,0 +1,26 @@
+.content {
+  width: 98%;
+}
+
+.header-text {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.grid {
+  width: 100%;
+  margin-top: 50px;
+  display: grid;
+  grid-gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+}
+
+.grid-item {
+  height: 65px;
+  text-align: center;
+  box-shadow: 1px 1px 10px 1px rgba(0,0,0,0.75);
+  text-decoration: none;
+  color: black;
+
+  background-color: #6db2db;
+}

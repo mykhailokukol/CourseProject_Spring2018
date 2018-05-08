@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Страница управления</title>
+    <link rel="stylesheet" href="{% static 'css/control.css' %}">
+  </head>
+  {% include 'public/header.html' %}
+  <body>
+    <div class="content">
+      <div class="header-text">
+        <h2>Управление нарушениями и ДТП</h2>
+      </div>
+      <div class="grid">
+        <a class="grid-item" href="fixate_accident/">
+          <h3>Зафиксировать ДТП</h3>
+        </a>
+        <a class="grid-item" href="fixate_violation/">
+          <h3>Зафиксировать нарушение</h3>
+        </a>
+        <a class="grid-item" href="send_email/">
+          <h3>Отправить письмо владельцу ТС</h3>
+        </a>
+        <a class="grid-item" href="violators/">
+          <h3>Список нарушителей</h3>
+        </a>
+        <a class="grid-item" href="owners_info/">
+          <h3>Нарушения и ДТП владельца ТС</h3>
+        </a>
+        <a class="grid-item" href="top_streets_acc/">
+          <h3>Топ опасных улиц</h3>
+        </a>
+        <a class="grid-item" href="top_streets_vio">
+          <h3>Топ нарушений по улицам</h3>
+        </a>
+        <a class="grid-item" href="top_cars/">
+          <h3>Топ ТС по ДТП</h3>
+        </a>
+        <a class="grid-item" href="vios_info/">
+          <h3>Добавить/изменить данные нарушения</h3>
+        </a>
+        <a class="grid-item" href="accs_info/">
+          <h3>Добавить/изменить данные ДТП</h3>
+        </a>
+        <a class="grid-item" href="/admin/auth/user/add/">
+          <h3>Зарегестрировать пользователя</h3>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

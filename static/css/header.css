@@ -1,0 +1,49 @@
+.header-div {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 98%;
+  height: 7%;
+  background: #386170;
+
+  color: white;
+  padding: 1% 1%;
+  overflow: hidden;
+  font-family: 'Vollkorn SC', serif;
+}
+
+.header-div a {
+  float: left;
+  color: white;
+  text-align: center;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 150%;
+  line-height: 25px;
+  border-radius: 4px;
+}
+
+#a_main {
+  font-size: 175%;
+  font-family: 'Pattaya', sans-serif;
+}
+
+.header-div a:hover {
+  color: #b2ceff;
+}
+
+.header-right {
+  float: right;
+  margin-right: 3%;
+}
+
+.header-right .auth-text {
+  text-align: center;
+  padding: 1%;
+}
+
+.header-right a {
+  margin-right: 10%;
+}

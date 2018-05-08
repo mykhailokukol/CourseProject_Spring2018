@@ -1,0 +1,8 @@
+.content {
+  position: absolute;
+  margin: 5px;
+  padding: 0;
+  top: 10%;
+  /* background-color: skyblue; */
+  font-family: 'Gabriela', serif;
+}

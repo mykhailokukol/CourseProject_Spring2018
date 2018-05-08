@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Профиль</title>
+    {% include 'public/fonts.html' %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+  </head>
+  {% include 'public/header.html' %}
+  <body>
+    <div class="content">
+      {% if user.is_authenticated %}
+          <div class="information">
+            <div class="photo-info">
+              <img src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" alt="">
+              <h5>Зарегестрирован: {{ user.date_joined }}</h5>
+            </div>
+            <div class="main-info">
+              <h2>{{ user.first_name }}
+                 {% for prof in profile %} {% if user_id == prof.user_id %} {{ prof.patronymic }} {% endif %} {% endfor %}
+                 {{ user.last_name }}</h2>
+              <p><strong>Номер ВУ:</strong> {{ user.username }}</p>
+              <p><strong>email:</strong><input style="margin: 2px; margin-left: 10px; width: 200px;" type="text" name="email_input" value="{{ user.email }}"></p>
+              <p><strong>Дата рождения:</strong>
+                {% for prof in profile %} {% if user_id == prof.user_id %} <input type="date" name="birthday" value="{{ prof.birthday }}"> {% endif %} {% endfor %} 
+              </p>
+              <a href="">Сохранить</a>
+              <a href="/profile/">Отмена</a>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="non-auth">
+          <h1>Вы не авторизованы.</h1>
+        </div>
+      {% endif %}
+  </body>
+</html>

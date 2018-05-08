@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Главная страница</title>
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+  </head>
+  {% include 'public/header.html' %}
+  <body>
+    <div class="content">
+      <div class="welcome-div">
+        <h2>Система управления и слежения за Дорожно-Транспортными Происшествиями и нарушениями Правил Дорожного Движения</h2>
+      </div>
+      <div class="limitation-div">
+        <h5>
+          Пользоваться данной системой могут только зарегестрированные водители, владельцы транспортных средств и сотрудники Управления безопасности
+          дорожного движения. Если Вы не зарегестрированы - воспользуйтесь возможностью создать аккаунт.
+        </h5>
+      </div>
+      <div class="auth-div">
+        <div class="login-div">
+          <h3>Уже зарегестрированы?</h3>
+          <a href="/login/"><input class="btn" type="button" name="button" value='Войти в систему'></button></a>
+        </div>
+        <div class="signup-div">
+          <h3>Еще не зарегестрированы?</h3>
+          <a href="/signup/"><input class="btn" type="button" name="button" value='Зарегестрироваться'></button></a>
+        </div>
+      </div>
+      <div class="footer-info">
+        <p>
+          Курсовая работа выполнена студентом группы ПИ-3.2.01 Одесской Национальной Академии Связи им. А.С. Попова.
+          <br>
+          Ф.И.О.: Кукол Михаил Сергеевич
+          <br>
+          Предмет(-ы): "Базы данных", "Программирование web-приложений"
+          <br>
+          2018 год
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
