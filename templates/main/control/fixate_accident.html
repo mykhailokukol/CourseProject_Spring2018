@@ -10,7 +10,11 @@
   {% include 'public/header.html' %}
   <body>
     <div class="content">
-
+      <form method="post">
+        {% csrf_token %}
+        {{ FixateAccidentForm.as_p }}
+        <input type="submit" name="fixate_accident" value="Зафиксировать">
+      </form>
     </div>
   </body>
 </html>

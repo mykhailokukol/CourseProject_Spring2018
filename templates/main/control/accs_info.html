@@ -3,14 +3,28 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Справочник ДТП</title>
     {% include 'public/fonts.html' %}
     <link rel="stylesheet" href="">
   </head>
   {% include 'public/header.html' %}
   <body>
     <div class="content">
-
+      <form method="post">
+        {% csrf_token %}
+        {{ AddAccidentForm.as_p }}
+        <input type="submit" name="add" value="Добавить">
+      </form>
+      <form method="post">
+        {% csrf_token %}
+        {{ ChangeAccidentForm.as_p }}
+        <input type="submit" name="change" value="Изменить">
+      </form>
+      <form method="post">
+        {% csrf_token %}
+        {{ DeleteAccidentForm.as_p }}
+        <input type="submit" name="delete" value="Удалить">
+      </form>
     </div>
   </body>
 </html>

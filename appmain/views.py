@@ -1,6 +1,7 @@
 from django.contrib.auth import login, authenticate, logout
+from django.contrib import messages
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, LoginForm, FixateAccidentForm, AddViolationForm, SendEmailForm
+from .forms import *
 from . import models
 from django.conf import settings
 from django.core.mail import send_mail
@@ -86,19 +87,7 @@ def profile_settings(request):
 # CONTROL PAGE
 
 def control(request):
-    if request.method == 'POST':
-        FixateAccident = FixateAccidentForm(request.POST, prefix='fixateaccform')
-        AddViolation = AddViolationForm(request.POST, prefix='addvioform')
-        if FixateAccident.is_valid():
-            print(FixateAccidentForm)
-        if AddViolation.is_valid():
-            type = request.POST.get('add_vio_type')
-            fine = request.POST.get('add_vio_fine')
-            print('Type: %s\nFine: %s' % (type, fine))
-    else:
-        AddViolation = AddViolationForm(prefix='addvioform')
-        FixateAccident = FixateAccidentForm(prefix='fixateaccform')
-    return render(request, 'main/control.html', {'FixateAccident': FixateAccident, 'AddViolation': AddViolation })
+    return render(request, 'main/control.html')
 
 # CONTROL PAGE VIEWS
 
@@ -115,10 +104,49 @@ def send_email(request):
     return render(request, 'main/control/send_email.html', { 'SendEmailForm': SendEmail })
 
 def accs_info(request):
-    return render(request, 'main/control/accs_info.html')
+    if request.method == 'POST':
+        type = None
+        if 'add' in request.POST:
+            AddAccident = AddAccidentForm(request.POST, prefix='Adding')
+            if AddAccident.is_valid():
+                type = request.POST.get('Adding-type')
+                accident = models.Accident(type=type)
+                accident.save()
+        elif 'change' in request.POST:
+            ChangeAccident = ChangeAccidentForm(request.POST, prefix='Changing')
+            # if ChangeAccident.is_valid():
+
+            # ИСПРАВИТЬ ПРОБЛЕМУ С ВАЛИДАЦИЕЙ!!!
+
+            accident = request.POST.get('Changing-accident')
+            type = request.POST.get('Changing-type')
+            models.Accident.objects.filter(type=accident).update(type=type)
+        elif 'delete' in request.POST:
+            DeleteAccident = DeleteAccidentForm(request.POST, prefix='Deleting')
+            # if DeleteAccident.is_valid():
+            accident = request.POST.get('Deleting-accident')
+            models.Accident.objects.filter(type=accident).delete()
+    return render(request, 'main/control/accs_info.html', {'AddAccidentForm': AddAccidentForm(prefix='Adding'), 'ChangeAccidentForm': ChangeAccidentForm(prefix='Changing'), 'DeleteAccidentForm': DeleteAccidentForm(prefix='Deleting'), })
 
 def fixate_accident(request):
-    return render(request, 'main/control/fixate_accident.html')
+    if request.method == 'POST':
+        FixateAccident = FixateAccidentForm(request.POST)
+        if FixateAccident.is_valid():
+            street = request.POST.get('street')
+            house = request.POST.get('house')
+            type = request.POST.get('type')
+            datetime = request.POST.get('datetime')
+            drivers_list = request.POST.get('drivers')
+            pedestrians_list = request.POST.get('pedestrians')
+            na_pedestrians_list = request.POST.get('na_pedestrians')
+            if not na_pedestrians_list:
+                print(street, house, type, datetime, drivers_list, pedestrians_list)
+            else:
+                print(street, house, type, datetime, drivers_list, pedestrians_list, na_pedestrians_list)
+    # ДОДЕЛАТЬ (10.05.18 02:19)
+    else:
+        FixateAccident = FixateAccidentForm()
+    return render(request, 'main/control/fixate_accident.html', { 'FixateAccidentForm': FixateAccident })
 
 def fixate_violation(request):
     return render(request, 'main/control/fixate_violation.html')
@@ -139,4 +167,28 @@ def violators(request):
     return render(request, 'main/control/violators.html')
 
 def vios_info(request):
-    return render(request, 'main/control/vios_info.html')
+    if request.method == 'POST':
+        type = fine = None
+        if 'add' in request.POST:
+            AddViolation = AddViolationForm(request.POST, prefix='Adding')
+            if AddViolation.is_valid():
+                type = request.POST.get('Adding-type')
+                fine = request.POST.get('Adding-fine')
+                violation = models.Violation(type=type, fine=fine)
+                violation.save()
+        elif 'change' in request.POST:
+            ChangeViolation = ChangeViolationForm(request.POST, prefix='Changing')
+            # if ChangeViolation.is_valid():
+
+            # ИСПРАВИТЬ ПРОБЛЕМУ С ВАЛИДАЦИЕЙ!!!
+
+            violation = request.POST.get('Changing-violation')
+            type = request.POST.get('Changing-type')
+            fine = request.POST.get('Changing-fine')
+            models.Violation.objects.filter(type=violation).update(type=type, fine=fine)
+        elif 'delete' in request.POST:
+            DeleteViolation = DeleteViolationForm(request.POST, prefix='Deleting')
+            # if DeleteViolation.is_valid():
+            violation = request.POST.get('Deleting-violation')
+            models.Violation.objects.filter(type=violation).delete()
+    return render(request, 'main/control/vios_info.html', {'AddViolationForm': AddViolationForm(prefix='Adding'), 'ChangeViolationForm': ChangeViolationForm(prefix='Changing'), 'DeleteViolationForm': DeleteViolationForm(prefix='Deleting'), })

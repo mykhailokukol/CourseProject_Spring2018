@@ -29,29 +29,48 @@ class LoginForm(forms.Form):
 
 # CONTROL PAGES FORMS BELOW:
 
-class FixateAccidentForm(forms.Form):
-    type = forms.ModelChoiceField(queryset=models.Accident.objects.values_list('type', flat=True), empty_label=None, label='Тип', required=False)
-    street = forms.CharField(max_length=100, required=False)
-    house = forms.CharField(max_length=4, required=False)
-    datetime = forms.DateTimeField(required=False)
-    culprit = forms.ModelChoiceField(
-        # queryset=models.User.objects.order_by('last_name').values_list('last_name', 'first_name'),
-        queryset=models.User.objects.all(),
-        to_field_name="last_name",
-        label='Виновник',
-        empty_label=None,
-        required=False
-        )
-    # victim = forms.ModelMultipleChoiceField(
-    #     queryset=models.User.objects.order_by('last_name').values_list('last_name', 'first_name'),
-    #     label='Пострадавшие',
-    #     )
-
 class AddViolationForm(forms.Form):
-    add_vio_type = forms.CharField(max_length=255, label='Тип', required=False)
-    add_vio_fine = forms.CharField(max_length=6, label='Штраф', required=False)
+    type = forms.CharField(max_length=255, label='Тип')
+    fine = forms.CharField(max_length=6, label='Штраф')
+
+class ChangeViolationForm(forms.Form):
+    violation = forms.ModelChoiceField(queryset=models.Violation.objects.values_list('type', flat=True), empty_label=None, label='Выберите нарушение')
+    type = forms.CharField(max_length=255, label='Тип')
+    fine = forms.CharField(max_length=6, label='Штраф')
+
+class DeleteViolationForm(forms.Form):
+    violation = forms.ModelChoiceField(queryset=models.Violation.objects.values_list('type', flat=True), empty_label=None, label='Выберите нарушение')
+
+class AddAccidentForm(forms.Form):
+    type = forms.CharField(max_length=255, label='Тип')
+
+class ChangeAccidentForm(forms.Form):
+    accident = forms.ModelChoiceField(queryset=models.Accident.objects.values_list('type', flat=True), empty_label=None, label='Выберите тип ДТП')
+    type = forms.CharField(max_length=255, label='Заменить на')
+
+class DeleteAccidentForm(forms.Form):
+    accident = forms.ModelChoiceField(queryset=models.Accident.objects.values_list('type', flat=True), empty_label=None, label='Выберите тип ДТП')
 
 class SendEmailForm(forms.Form):
     email = forms.CharField(label='Электронный адрес')
     subject = forms.CharField(label='Тема')
     data = forms.CharField(widget=forms.Textarea, label='Сообщение')
+
+class FixateAccidentForm(forms.Form):
+    street = forms.CharField(max_length=255, label='Улица')
+    house = forms.CharField(max_length=4, label='Номер дома')
+    datetime = forms.DateTimeField(label='Дата и время', input_formats=['%d-%m-%Y %H:%M:%S'])
+    type = forms.ModelChoiceField(queryset=models.Accident.objects.all(), empty_label=None, label='Тип ДТП')
+    drivers = forms.ModelMultipleChoiceField(queryset=models.User.objects.all(), label='Водители')
+    pedestrians = forms.ModelMultipleChoiceField(queryset=models.User.objects.all(), label='Пешеходы')
+    na_pedestrians = forms.CharField(max_length=None, required=False, widget=forms.Textarea, label='Незарегестрированные пешеходы')
+
+
+
+
+
+
+
+
+
+#
