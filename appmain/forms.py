@@ -59,11 +59,18 @@ class SendEmailForm(forms.Form):
 class FixateAccidentForm(forms.Form):
     street = forms.CharField(max_length=255, label='Улица')
     house = forms.CharField(max_length=4, label='Номер дома')
-    datetime = forms.DateTimeField(label='Дата и время', input_formats=['%d-%m-%Y %H:%M:%S'])
+    datetime = forms.DateTimeField(label='Дата и время')
     type = forms.ModelChoiceField(queryset=models.Accident.objects.all(), empty_label=None, label='Тип ДТП')
-    drivers = forms.ModelMultipleChoiceField(queryset=models.User.objects.all(), label='Водители')
-    pedestrians = forms.ModelMultipleChoiceField(queryset=models.User.objects.all(), label='Пешеходы')
+    drivers = forms.ModelMultipleChoiceField(queryset=models.Driver.objects.all(), label='Водители')
+    pedestrians = forms.ModelMultipleChoiceField(queryset=models.User.objects.all(), label='Пешеходы', required=False)
     na_pedestrians = forms.CharField(max_length=None, required=False, widget=forms.Textarea, label='Незарегестрированные пешеходы')
+
+class FixateViolationForm(forms.Form):
+    street = forms.CharField(max_length=255, label='Улица')
+    house = forms.CharField(max_length=4, label='Номер дома')
+    datetime = forms.DateTimeField(label='Дата и время')
+    type = forms.ModelChoiceField(queryset=models.Violation.objects.all(), empty_label=None, label='Тип нарушения')
+    car = forms.ModelChoiceField(queryset=models.Car.objects.all(), empty_label=None, label='Автомобиль')
 
 
 

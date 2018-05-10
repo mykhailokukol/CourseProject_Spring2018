@@ -46,7 +46,7 @@ class Driver(models.Model):
 
 # ВОДИТЕЛЬ СОВЕРШИЛ НАРУШЕНИЕ ПДД
 class DrivingViolation(models.Model):
-    driver = models.ForeignKey('Driver', on_delete=models.CASCADE, null=False)
+    car = models.ForeignKey('Car', on_delete=models.CASCADE, null=False, default=2)
     violation = models.ForeignKey('Violation', on_delete=models.CASCADE, null=False)
     datetime = models.DateTimeField(null=False, auto_now=True)
     street = models.CharField(max_length=100, null=False, default='Улица не указана')

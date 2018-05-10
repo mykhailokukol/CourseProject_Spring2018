@@ -3,14 +3,18 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Фиксация нарушения</title>
     {% include 'public/fonts.html' %}
     <link rel="stylesheet" href="">
   </head>
   {% include 'public/header.html' %}
   <body>
     <div class="content">
-
+      <form method="post">
+        {% csrf_token %}
+        {{ FixateViolationForm.as_p }}
+        <input type="submit" name="fixate_violation" value="Зафиксировать">
+      </form>
     </div>
   </body>
 </html>

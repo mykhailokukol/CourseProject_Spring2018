@@ -60,9 +60,10 @@ def profile(request):
     user = request.user
     accidents_query = models.Profile.objects.raw("select distinct 1 as id, acc.type, datetime, street, house from appmain_fixationaccident fixacc join auth_user au on au.id = %s join appmain_driver drv on drv.human_id = au.id join appmain_drivers drvs on drvs.driver_id = drv.id join appmain_fixationaccident_accident_type fat on fat.fixationaccident_id = fixacc.id join appmain_accident acc on acc.id = fat.accident_id" % (request.user.id))
     acc_types = models.Accident.objects.all()
-    violations_query = models.Profile.objects.raw("select distinct 1 as id, violation_id, datetime, street, house from appmain_drivingviolation dv join appmain_driver drv on drv.id = dv.driver_id join auth_user au on au.id = %s;" % (request.user.id))
+    # violations_query = models.Profile.objects.raw("select distinct 1 as id, violation_id, datetime, street, house from appmain_drivingviolation dv join appmain_driver drv on drv.id = dv.driver_id join auth_user au on au.id = %s;" % (request.user.id))
+    violations_query = models.Profile.objects.raw("select distinct 1 as id, violation_id, datetime, street, house from appmain_drivingviolation dv join auth_user au on au.id = %s join appmain_driver drv on drv.human_id = au.id" % (request.user.id))
     vio_types = models.Violation.objects.all()
-    mycars_query = models.Profile.objects.raw("select distinct 1 as id, mark, model, power, engine_capacity, body_type, year, lecinse_plate from appmain_car car join appmain_driver drv on drv.human_id = %s" % (request.user.id))
+    mycars_query = models.Profile.objects.raw("select distinct 1 as id, mark, model, power, engine_capacity, body_type, year, lecinse_plate from appmain_car car join appmain_driver drv on (drv.human_id = %s and car.id = drv.car_id)" % (request.user.id))
     return render(request, 'main/profile.html', {
         'profile': models.Profile.objects.all(),
         'user_id': request.user.id,
@@ -136,20 +137,47 @@ def fixate_accident(request):
             house = request.POST.get('house')
             type = request.POST.get('type')
             datetime = request.POST.get('datetime')
-            drivers_list = request.POST.get('drivers')
-            pedestrians_list = request.POST.get('pedestrians')
+            drivers_list = FixateAccident.cleaned_data['drivers']
+            print(drivers_list)
+            try:
+                pedestrians_list = FixateAccident.cleaned_data['pedestrians']
+            except Exception:
+                pedestrians_list = None
             na_pedestrians_list = request.POST.get('na_pedestrians')
             if not na_pedestrians_list:
+                fixated_accident = models.FixationAccident(street=street, house=house, datetime=datetime)
+                fixated_accident.save()
+                fixacc_last_id = models.FixationAccident.objects.latest('id') # нужна ли эта строка? Или стоит использовать 'fixated_accident'?
+                for driver in drivers_list:
+                    accident_driver = models.Drivers(driver=driver, fixated_accident=fixacc_last_id)
+                    accident_driver.save()
+                if pedestrians_list is not None:
+                    for pedestrian in pedestrians_list:
+                        accident_pedestrian = models.Pedestrians(human=pedestrian, fixated_accident=fixacc_last_id)
+                        accident_pedestrian.save()
+                fixacc_last_id.accident_type.add(type)
                 print(street, house, type, datetime, drivers_list, pedestrians_list)
             else:
-                print(street, house, type, datetime, drivers_list, pedestrians_list, na_pedestrians_list)
-    # ДОДЕЛАТЬ (10.05.18 02:19)
+               print(street, house, type, datetime, drivers_list, pedestrians_list, na_pedestrians_list)
     else:
         FixateAccident = FixateAccidentForm()
     return render(request, 'main/control/fixate_accident.html', { 'FixateAccidentForm': FixateAccident })
 
 def fixate_violation(request):
-    return render(request, 'main/control/fixate_violation.html')
+    if request.method == 'POST':
+        FixateViolation = FixateViolationForm(request.POST)
+        if FixateViolation.is_valid():
+            street = request.POST.get('street')
+            house = request.POST.get('house')
+            type = FixateViolation.cleaned_data['type']
+            datetime = request.POST.get('datetime')
+            car = FixateViolation.cleaned_data['car']
+            print(street, house, type, datetime, car)
+            fixvio = models.DrivingViolation(street=street, house=house, datetime=datetime, car=car, violation=type)
+            fixvio.save()
+    else:
+        FixateViolation = FixateViolationForm()
+    return render(request, 'main/control/fixate_violation.html', { 'FixateViolationForm': FixateViolation })
 
 def owners_info(request):
     return render(request, 'main/control/owners_info.html')
