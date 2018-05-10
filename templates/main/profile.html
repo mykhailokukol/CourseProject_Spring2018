@@ -38,7 +38,7 @@
               <td>Улица</td>
               <td>Дом</td>
               <td></td>
-            </tr>
+            </tr> 
             {% for ac in accidents_query %}
             <tr>
               <td>{% for a in accidents %} {% if ac.type == a.type %} {{ a.type }} {% endif %} {% endfor %}</td>

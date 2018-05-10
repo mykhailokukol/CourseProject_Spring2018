@@ -192,7 +192,10 @@ def top_streets_vio(request):
     return render(request, 'main/control/top_streets_vio')
 
 def violators(request):
-    return render(request, 'main/control/violators.html')
+    user = request.user
+    violators_query = models.DrivingViolation.objects.raw("select distinct 1 as id, last_name, first_name from auth_user au join appmain_driver drv on drv.human_id = au.id join appmain_car car on car.id = drv.car_id join appmain_drivingviolation vio on drv.car_id = vio.car_id")
+
+    return render(request, 'main/control/violators.html', { 'violators_query': violators_query })
 
 def vios_info(request):
     if request.method == 'POST':

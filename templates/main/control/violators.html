@@ -3,14 +3,25 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Нарушители</title>
     {% include 'public/fonts.html' %}
     <link rel="stylesheet" href="">
   </head>
   {% include 'public/header.html' %}
   <body>
     <div class="content">
-
+      <table>
+        <thead>
+          <th>Имя</th>
+          <th>Фамилия</th>
+        </thead>
+        {% for violator in violators_query %}
+          <tr>
+            <td>{{ violator.last_name }}</td>
+            <td>{{ violator.first_name }}</td>
+          </tr>
+        {% endfor %}
+      </table>
     </div>
   </body>
 </html>
