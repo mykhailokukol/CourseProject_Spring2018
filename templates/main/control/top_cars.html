@@ -3,14 +3,29 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Топ ТС по ДТП</title>
     {% include 'public/fonts.html' %}
     <link rel="stylesheet" href="">
   </head>
   {% include 'public/header.html' %}
   <body>
     <div class="content">
-
+      <table>
+        <thead>
+          <th>Марка</th>
+          <th>Модель</th>
+          <th>Номер</th>
+          <th>Кол-во ДТП</th>
+        </thead>
+        {% for q in query %}
+        <tr>
+          <td>{{ q.mark }}</td>
+          <td>{{ q.model }}</td>
+          <td>{{ q.lecinse_plate }}</td>
+          <td>{{ q.cnt }}</td>
+        </tr>
+        {% endfor %}
+      </table>
     </div>
   </body>
 </html>

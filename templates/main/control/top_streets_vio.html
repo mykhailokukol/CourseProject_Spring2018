@@ -3,14 +3,25 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Топ улиц по нарушениям</title>
     {% include 'public/fonts.html' %}
     <link rel="stylesheet" href="">
   </head>
   {% include 'public/header.html' %}
   <body>
     <div class="content">
-
+      <table>
+        <thead>
+          <th>Улица</th>
+          <th>Количество нарушений</th>
+        </thead>
+        {% for q in query %}
+        <tr>
+          <td>{{ q.street }}</td>
+          <td>{{ q.cnt }}</td>
+        </tr>
+        {% endfor %}
+      </table>
     </div>
   </body>
 </html>

@@ -18,9 +18,11 @@
             <h5>Зарегестрирован: {{ user.date_joined }}</h5>
           </div>
           <div class="main-info">
-            <h2>{{ user.first_name }}
+            <h2>
+               {{ user.first_name }}
                {% for prof in profile %} {% if user_id == prof.user_id %} {{ prof.patronymic }} {% endif %} {% endfor %}
-               {{ user.last_name }}</h2>
+               {{ user.last_name }}
+             </h2>
             <p><strong>Номер ВУ:</strong> {{ user.username }}</p>
             <p><strong>email:</strong> {{ user.email }}</p>
             <p><strong>Дата рождения:</strong>{% for prof in profile %} {% if user_id == prof.user_id %} {{ prof.birthday }} {% endif %} {% endfor %} </p>
@@ -38,7 +40,7 @@
               <td>Улица</td>
               <td>Дом</td>
               <td></td>
-            </tr> 
+            </tr>
             {% for ac in accidents_query %}
             <tr>
               <td>{% for a in accidents %} {% if ac.type == a.type %} {{ a.type }} {% endif %} {% endfor %}</td>

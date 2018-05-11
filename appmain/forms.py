@@ -72,6 +72,10 @@ class FixateViolationForm(forms.Form):
     type = forms.ModelChoiceField(queryset=models.Violation.objects.all(), empty_label=None, label='Тип нарушения')
     car = forms.ModelChoiceField(queryset=models.Car.objects.all(), empty_label=None, label='Автомобиль')
 
+class OwnerInfoForm(forms.Form):
+    owner = forms.ModelChoiceField(queryset=models.User.objects.all(), empty_label=None, label='Владелец')
+
+
 
 
 

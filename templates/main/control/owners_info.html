@@ -3,14 +3,62 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Пользовательские нарушения и ДТП</title>
     {% include 'public/fonts.html' %}
     <link rel="stylesheet" href="">
   </head>
   {% include 'public/header.html' %}
   <body>
     <div class="content">
-
+      <form method="post">
+        {% csrf_token %}
+        {{ OwnerInfoForm.as_p }}
+        <input type="submit" name="show" value="Отобразить">
+      </form>
+      <div class="vio-and-acc">
+        <table>
+          <thead>
+            <th colspan="5">ДТП, связанные с пользователем</th>
+          </thead>
+          <tr>
+            <td>Тип ДТП</td>
+            <td>Дата и время</td>
+            <td>Улица</td>
+            <td>Дом</td>
+            <td></td>
+          </tr>
+          {% for ac in accidents_query %}
+          <tr>
+            <td>{% for a in accidents %} {% if ac.type == a.type %} {{ a.type }} {% endif %} {% endfor %}</td>
+            <td>{{ ac.datetime }}</td>
+            <td>{{ ac.street }}</td>
+            <td>{{ ac.house }}</td>
+            <td><a href="">Обзор</a></td>
+          </tr>
+          {% endfor %}
+        </table>
+        <table>
+          <thead>
+            <th colspan="5">Нарушения ПДД, связанные с пользователем</th>
+          </thead>
+          <tr>
+            <td>Тип нарушения</td>
+            <td>Дата и время</td>
+            <td>Улица</td>
+            <td>Дом</td>
+            <td></td>
+          </tr>
+          {% for vio in vio_query %}
+          <tr>
+            <td>{% for v in vio_types %} {% if vio.violation_id == v.id %} {{ v.type }} {% endif %} {% endfor %}</td>
+            <td>{{ vio.datetime }}</td>
+            <td>{{ vio.street }}</td>
+            <td>{{ vio.house }}</td>
+            <td><a href="">Обзор</a></td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
     </div>
   </body>
 </html>

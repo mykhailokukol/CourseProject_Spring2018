@@ -180,21 +180,41 @@ def fixate_violation(request):
     return render(request, 'main/control/fixate_violation.html', { 'FixateViolationForm': FixateViolation })
 
 def owners_info(request):
-    return render(request, 'main/control/owners_info.html')
+    if request.method == 'POST':
+        OwnerInfo = OwnerInfoForm(request.POST)
+        if OwnerInfo.is_valid():
+            owner = OwnerInfo.cleaned_data['owner']
+            accidents_query = models.Profile.objects.raw("select distinct 1 as id, acc.type, datetime, street, house from appmain_fixationaccident fixacc join auth_user au on au.username = '%s' join appmain_driver drv on drv.human_id = au.id join appmain_drivers drvs on drvs.driver_id = drv.id join appmain_fixationaccident_accident_type fat on fat.fixationaccident_id = fixacc.id join appmain_accident acc on acc.id = fat.accident_id" % (owner))
+            acc_types = models.Accident.objects.all()
+            violations_query = models.Profile.objects.raw("select distinct 1 as id, violation_id, datetime, street, house from appmain_drivingviolation dv join auth_user au on au.username = '%s' join appmain_driver drv on drv.human_id = au.id" % (owner))
+            vio_types = models.Violation.objects.all()
+    else:
+        OwnerInfo = OwnerInfoForm()
+        acc_types = vio_types = violations_query = accidents_query = owner = None
+    return render(request, 'main/control/owners_info.html', {
+        'OwnerInfoForm': OwnerInfo,
+        'accidents_query': accidents_query,
+        'accidents': acc_types,
+        'vio_query': violations_query,
+        'vio_types': vio_types,
+        'user_id': owner,
+    })
 
 def top_cars(request):
-    return render(request, 'main/control/top_cars.html')
+    top_cars_query = models.Car.objects.raw('select 1 as id, mark, model, lecinse_plate, cnt from top_cars_acc')
+    return render(request, 'main/control/top_cars.html', { 'query': top_cars_query })
 
 def top_streets_acc(request):
-    return render(request, 'main/control/top_streets_acc.html')
+    top_streets_acc_query = models.FixationAccident.objects.raw('select 1 as id, street, cnt from top_streets_acc')
+    return render(request, 'main/control/top_streets_acc.html', { 'query': top_streets_acc_query })
 
 def top_streets_vio(request):
-    return render(request, 'main/control/top_streets_vio')
+    top_streets_vio_query = models.DrivingViolation.objects.raw('select 1 as id, street, cnt from top_streets_vio')
+    return render(request, 'main/control/top_streets_vio.html', { 'query': top_streets_vio_query })
 
 def violators(request):
     user = request.user
     violators_query = models.DrivingViolation.objects.raw("select distinct 1 as id, last_name, first_name from auth_user au join appmain_driver drv on drv.human_id = au.id join appmain_car car on car.id = drv.car_id join appmain_drivingviolation vio on drv.car_id = vio.car_id")
-
     return render(request, 'main/control/violators.html', { 'violators_query': violators_query })
 
 def vios_info(request):
