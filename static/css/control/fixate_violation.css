@@ -1,0 +1,24 @@
+.content {
+  width: calc(97% - 50px);
+}
+
+form {
+  margin: 50px;
+  width: calc(100% - 50px);
+  padding: 10px;
+  background-color: #ccd3dd;
+  text-align: center;
+}
+
+label {
+  vertical-align: middle;
+  text-align: center;
+}
+
+#id_street {
+  width: 220px;
+}
+
+#id_house {
+  width: 175px;
+}

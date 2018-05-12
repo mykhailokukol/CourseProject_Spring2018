@@ -6,3 +6,27 @@
   /* background-color: skyblue; */
   font-family: 'Gabriela', serif;
 }
+
+.btn-success {
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#74ad5a', endColorstr='#68a54b',GradientType=0);
+	background-color:#74ad5a;
+	border:1px solid #3b6e22;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-size:16px;
+	padding:8px 20px;
+	text-decoration:none;
+}
+.btn-success:hover {
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#68a54b', endColorstr='#74ad5a',GradientType=0);
+	background-color:#68a54b;
+}
+.btn-success:active {
+	position:relative;
+	top:1px;
+}
+
+textarea {
+  height: 20px;
+}

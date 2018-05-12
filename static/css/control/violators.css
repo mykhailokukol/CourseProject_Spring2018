@@ -1,0 +1,18 @@
+.content {
+  width: calc(97% - 50px);
+  text-align: center;
+}
+
+table {
+  margin: 50px;
+  width: calc(100% - 50px);
+  border-collapse: collapse;
+}
+
+tr, td, th, table {
+  border: 1px solid black;
+}
+
+th {
+  border: 2px solid black;
+}

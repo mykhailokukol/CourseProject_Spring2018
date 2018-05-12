@@ -1,0 +1,24 @@
+.content {
+  width: calc(97% - 50px);
+}
+
+form {
+  margin: 50px;
+  width: calc(100% - 50px);
+  padding: 10px;
+  background-color: #ccd3dd;
+  text-align: center;
+}
+
+label {
+  vertical-align: middle;
+  text-align: center;
+}
+
+#id_email {
+  width: 230px;
+}
+
+#id_subject {
+  width: 350px;
+}

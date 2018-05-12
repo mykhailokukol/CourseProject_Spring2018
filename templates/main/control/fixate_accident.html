@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title>Фиксация ДТП</title>
     {% include 'public/fonts.html' %}
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="{% static 'css/control/fixate_accident.css' %}">
   </head>
   {% include 'public/header.html' %}
   <body>
@@ -13,7 +13,7 @@
       <form method="post">
         {% csrf_token %}
         {{ FixateAccidentForm.as_p }}
-        <input type="submit" name="fixate_accident" value="Зафиксировать">
+        <input type="submit" name="fixate_accident" value="Зафиксировать" class="btn-success">
       </form>
     </div>
   </body>

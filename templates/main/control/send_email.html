@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title>Отправить письмо владельцу ТС</title>
     {% include 'public/fonts.html' %}
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="{% static 'css/control/send_email.css' %}">
   </head>
   {% include 'public/header.html' %}
   <body>
@@ -13,7 +13,7 @@
       <form method="post">
         {% csrf_token %}
         {{ SendEmailForm.as_p }}
-        <input type="submit" name="submit" value="Отправить">
+        <input type="submit" name="submit" value="Отправить" class="btn-success">
       </form>
     </div>
   </body>

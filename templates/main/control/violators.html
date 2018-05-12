@@ -5,15 +5,15 @@
     <meta charset="utf-8">
     <title>Нарушители</title>
     {% include 'public/fonts.html' %}
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="{% static 'css/control/violators.css' %}">
   </head>
   {% include 'public/header.html' %}
   <body>
     <div class="content">
       <table>
         <thead>
-          <th>Имя</th>
           <th>Фамилия</th>
+          <th>Имя</th>
         </thead>
         {% for violator in violators_query %}
           <tr>
