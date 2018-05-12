@@ -28,7 +28,7 @@ urlpatterns = [
     path('tasks/', views.tasks, name='tasks page'),
     path('profile/', views.profile, name='profile page'),
     path('profile/settings/', views.profile_settings, name='profile settings page'),
-    # control pages urls here:
+    # control pages urls start
     # I KNOW I SHOULD BETTER CREATE NEW APP, BUT I'M TOO LAZY AND I DON'T HAVE ENOUGH TIME TO DO THAT.
     path('control/', views.control, name='control page'),
     path('control/accs_info/', views.accs_info, name='accs_info page'),
@@ -41,4 +41,6 @@ urlpatterns = [
     path('control/top_streets_acc/', views.top_streets_acc, name='top_streets_acc page'),
     path('control/violators/', views.violators, name='violators page'),
     path('control/vios_info/', views.vios_info, name='vios_info page'),
+    # control pages urls end.
+    path('access_denied/', views.access_denied, name='access denied page'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

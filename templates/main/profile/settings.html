@@ -13,7 +13,7 @@
       {% if user.is_authenticated %}
           <div>
             <div>
-              <img src="{% if user.profile.avatar.url != '' %}{{ user.profile.avatar.url }}{% endif %}" alt="">
+              <img src="{% if user.profile.avatar.url != '' %}{{ user.profile.avatar.url }}  {% else %} https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg {% endif %}" alt="">
               <h5>Зарегестрирован: {{ user.date_joined }}</h5>
               <div class="cng-photo">
                 <form method="post" enctype="multipart/form-data">
@@ -28,7 +28,7 @@
                  {{ user.profile.patronymic }}
                  {{ user.last_name }}</h2>
               <p><strong>Номер ВУ:</strong> {{ user.username }}</p>
-              <form method="post">
+              <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ ChangingForm.as_p }}
                 <input type="submit" name="cng_profile" value="Сохранить">
@@ -37,7 +37,7 @@
             </div>
           </div>
           <div class="add-car" style="margin-left: 50px;">
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
               {% csrf_token %}
               {{ CarAddingForm.as_p }}
               <input type="submit" name="addcar" value="Добавить">

@@ -6,12 +6,13 @@ from . import models
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 # AUTH PAGES VIEWS
 
 def signup(request):
     logout(request)
-    uploaded_file_url = ''
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -26,7 +27,7 @@ def signup(request):
             return redirect('/home/')
     else:
         form = SignUpForm()
-    return render(request, 'auth/sign_up.html', {'form': form, 'uploaded_file_url': uploaded_file_url})
+    return render(request, 'auth/sign_up.html', { 'form': form })
 
 def login_page(request):
     logout(request)
@@ -57,6 +58,7 @@ def tasks(request):
 
 # PROFILE VIEWS
 
+# @login_required
 def profile(request):
     user = request.user
     accidents_query = models.Profile.objects.raw("select distinct 1 as id, acc.type, datetime, street, house from appmain_fixationaccident fixacc join auth_user au on au.id = %s join appmain_driver drv on drv.human_id = au.id join appmain_drivers drvs on drvs.driver_id = drv.id join appmain_fixationaccident_accident_type fat on fat.fixationaccident_id = fixacc.id join appmain_accident acc on acc.id = fat.accident_id" % (request.user.id))
@@ -75,44 +77,47 @@ def profile(request):
         'my_cars': mycars_query,
     })
 
+@login_required
 def profile_settings(request):
-    if request.method == 'POST':
-        if 'addcar' in request.POST:
-            PSAddCar = PSAddCarForm(request.POST, prefix='CarAdding')
-            if PSAddCar.is_valid():
-                car = request.POST.get('CarAdding-car')
-                sure = request.POST.get('CarAdding-sure')
-                car = models.Car.objects.filter(pk=car)[0]
-                if sure:
-                    car_model = models.Driver(car=car, human=request.user)
-                    car_model.save()
-        elif 'cng_profile' in request.POST:
-            PSChanging = PSChangingForm(request.POST, prefix='Changing')
-            # Need to be fixed!
-            # if PSChanging.is_valid():
-            email = birthday = None
-            email = request.POST.get('Changing-email')
-            birthday = request.POST.get('Changing-birthday')
-            if not email:
-                models.Profile.objects.filter(pk=request.user.id).update(birthday=birthday)
-            elif not birthday:
-                models.User.objects.filter(pk=request.user.id).update(email=email)
-            else:
-                models.User.objects.filter(pk=request.user.id).update(email=email)
-                models.Profile.objects.filter(pk=request.user.id).update(birthday=birthday)
-    if request.method == 'POST' and request.FILES['Photo-avatar']:
-        if 'cng_photo' in request.POST:
-            PSChangePhoto = PSChangePhotoForm(request.POST, request.FILES, prefix='Photo')
-            print(PSChangePhoto)
-            # Need to be fixed
-            # if PSChangePhoto.is_valid():
-            # save to project
-            photo = request.FILES['Photo-avatar']
-            fs = FileSystemStorage()
-            filename = fs.save(photo.name, photo)
-            # save to db
-            avatar_path = filename
-            models.Profile.objects.filter(pk=request.user.id).update(avatar=avatar_path)
+    try:
+        if request.method == 'POST' and request.FILES['Photo-avatar']:
+            if 'cng_photo' in request.POST:
+                PSChangePhoto = PSChangePhotoForm(request.POST, request.FILES, prefix='Photo')
+                # Need to be fixed
+                # if PSChangePhoto.is_valid():
+
+                # save to project
+                photo = request.FILES['Photo-avatar']
+                fs = FileSystemStorage()
+                filename = fs.save(photo.name, photo)
+                print(filename)
+                # save to db
+                models.Profile.objects.filter(pk=request.user.id).update(avatar=filename)
+    except Exception:
+        if request.method == 'POST':
+            if 'addcar' in request.POST:
+                PSAddCar = PSAddCarForm(request.POST, prefix='CarAdding')
+                if PSAddCar.is_valid():
+                    car = request.POST.get('CarAdding-car')
+                    sure = request.POST.get('CarAdding-sure')
+                    car = models.Car.objects.filter(pk=car)[0]
+                    if sure:
+                        car_model = models.Driver(car=car, human=request.user)
+                        car_model.save()
+            elif 'cng_profile' in request.POST:
+                PSChanging = PSChangingForm(request.POST, prefix='Changing')
+                # Need to be fixed!
+                # if PSChanging.is_valid():
+                email = birthday = None
+                email = request.POST.get('Changing-email')
+                birthday = request.POST.get('Changing-birthday')
+                if not email:
+                    models.Profile.objects.filter(user_id=request.user.id).update(birthday=birthday)
+                elif not birthday:
+                    models.User.objects.filter(pk=request.user.id).update(email=email)
+                else:
+                    models.User.objects.filter(pk=request.user.id).update(email=email)
+                    models.Profile.objects.filter(user_id=request.user.id).update(birthday=birthday)
     return render(request, 'main/profile/settings.html', {
         'PhotoChangeForm': PSChangePhotoForm(prefix='Photo'),
         'CarAddingForm': PSAddCarForm(prefix='CarAdding'),
@@ -128,11 +133,15 @@ def profile_settings(request):
 
 # CONTROL PAGE
 
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='inspectors').exists(), login_url='/access_denied/')
 def control(request):
     return render(request, 'main/control.html')
 
 # CONTROL PAGE VIEWS
 
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='inspectors').exists(), login_url='/access_denied/')
 def send_email(request):
     if request.method == 'POST':
         SendEmail = SendEmailForm(request.POST)
@@ -146,6 +155,8 @@ def send_email(request):
         SendEmail = SendEmailForm()
     return render(request, 'main/control/send_email.html', { 'SendEmailForm': SendEmail })
 
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='inspectors').exists(), login_url='/access_denied/')
 def accs_info(request):
     if request.method == 'POST':
         type = None
@@ -171,6 +182,8 @@ def accs_info(request):
             models.Accident.objects.filter(type=accident).delete()
     return render(request, 'main/control/accs_info.html', {'AddAccidentForm': AddAccidentForm(prefix='Adding'), 'ChangeAccidentForm': ChangeAccidentForm(prefix='Changing'), 'DeleteAccidentForm': DeleteAccidentForm(prefix='Deleting'), })
 
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='inspectors').exists(), login_url='/access_denied/')
 def fixate_accident(request):
     if request.method == 'POST':
         FixateAccident = FixateAccidentForm(request.POST)
@@ -205,6 +218,8 @@ def fixate_accident(request):
         FixateAccident = FixateAccidentForm()
     return render(request, 'main/control/fixate_accident.html', { 'FixateAccidentForm': FixateAccident })
 
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='inspectors').exists(), login_url='/access_denied/')
 def fixate_violation(request):
     if request.method == 'POST':
         FixateViolation = FixateViolationForm(request.POST)
@@ -221,6 +236,8 @@ def fixate_violation(request):
         FixateViolation = FixateViolationForm()
     return render(request, 'main/control/fixate_violation.html', { 'FixateViolationForm': FixateViolation })
 
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='inspectors').exists(), login_url='/access_denied/')
 def owners_info(request):
     if request.method == 'POST':
         OwnerInfo = OwnerInfoForm(request.POST)
@@ -243,23 +260,33 @@ def owners_info(request):
         'user_id': owner,
     })
 
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='inspectors').exists(), login_url='/access_denied/')
 def top_cars(request):
     top_cars_query = models.Car.objects.raw('select 1 as id, mark, model, lecinse_plate, cnt from top_cars_acc')
     return render(request, 'main/control/top_cars.html', { 'query': top_cars_query })
 
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='inspectors').exists(), login_url='/access_denied/')
 def top_streets_acc(request):
     top_streets_acc_query = models.FixationAccident.objects.raw('select 1 as id, street, cnt from top_streets_acc')
     return render(request, 'main/control/top_streets_acc.html', { 'query': top_streets_acc_query })
 
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='inspectors').exists(), login_url='/access_denied/')
 def top_streets_vio(request):
     top_streets_vio_query = models.DrivingViolation.objects.raw('select 1 as id, street, cnt from top_streets_vio')
     return render(request, 'main/control/top_streets_vio.html', { 'query': top_streets_vio_query })
 
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='inspectors').exists(), login_url='/access_denied/')
 def violators(request):
     user = request.user
     violators_query = models.DrivingViolation.objects.raw("select distinct 1 as id, last_name, first_name from auth_user au join appmain_driver drv on drv.human_id = au.id join appmain_car car on car.id = drv.car_id join appmain_drivingviolation vio on drv.car_id = vio.car_id")
     return render(request, 'main/control/violators.html', { 'violators_query': violators_query })
 
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='inspectors').exists(), login_url='/access_denied/')
 def vios_info(request):
     if request.method == 'POST':
         type = fine = None
@@ -286,3 +313,8 @@ def vios_info(request):
             violation = request.POST.get('Deleting-violation')
             models.Violation.objects.filter(type=violation).delete()
     return render(request, 'main/control/vios_info.html', {'AddViolationForm': AddViolationForm(prefix='Adding'), 'ChangeViolationForm': ChangeViolationForm(prefix='Changing'), 'DeleteViolationForm': DeleteViolationForm(prefix='Deleting'), })
+
+# ERRORS PAGES VIEWS
+
+def access_denied(request):
+    return render(request, 'main/errors/access_denied.html')

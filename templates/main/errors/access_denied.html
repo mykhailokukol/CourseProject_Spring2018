@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Доступ запрещен</title>
+    {% include 'public/fonts.html' %}
+  </head>
+  {% include 'public/header.html' %}
+  <body>
+    <div class="content">
+      <h1>Доступ запрещен</h1>
+      <h4>У Вас нет прав для просмотра этой страницы. Обратитесь за помощью к администратору.</h4>
+      <a href="/home/"><input type="button" name="home" value="Домой"></a>
+    </div>
+  </body>
+</html>

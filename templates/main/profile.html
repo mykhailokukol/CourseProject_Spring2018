@@ -14,13 +14,13 @@
       <div class="info-and-tables">
         <div class="information">
           <div class="photo-info">
-            <img src="{{ user.profile.avatar.url }}" alt="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg">
+            <img src="{% if user.profile.avatar.url != '' %} {{ user.profile.avatar.url }} {% else %} https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg {% endif %}" alt="">
             <h5>Зарегестрирован: {{ user.date_joined }}</h5>
           </div>
           <div class="main-info">
             <h2>
                {{ user.first_name }}
-               {% for prof in profile %} {% if user_id == prof.user_id %} {{ prof.patronymic }} {% endif %} {% endfor %}
+               {{ user.profile.patronymic }}
                {{ user.last_name }}
              </h2>
             <p><strong>Номер ВУ:</strong> {{ user.username }}</p>
@@ -39,7 +39,7 @@
               <td>Дата и время</td>
               <td>Улица</td>
               <td>Дом</td>
-              <td></td>
+              <!-- <td></td> -->
             </tr>
             {% for ac in accidents_query %}
             <tr>
@@ -47,7 +47,7 @@
               <td>{{ ac.datetime }}</td>
               <td>{{ ac.street }}</td>
               <td>{{ ac.house }}</td>
-              <td><a href="">Обзор</a></td>
+              <!-- <td><a href="">Обзор</a></td> -->
             </tr>
             {% endfor %}
           </table>
@@ -60,7 +60,7 @@
               <td>Дата и время</td>
               <td>Улица</td>
               <td>Дом</td>
-              <td></td>
+              <!-- <td></td> -->
             </tr>
             {% for vio in vio_query %}
             <tr>
@@ -68,7 +68,7 @@
               <td>{{ vio.datetime }}</td>
               <td>{{ vio.street }}</td>
               <td>{{ vio.house }}</td>
-              <td><a href="">Обзор</a></td>
+              <!-- <td><a href="">Обзор</a></td> -->
             </tr>
             {% endfor %}
           </table>
@@ -86,7 +86,7 @@
               <th>Тип кузова</th>
               <th>Год выпуска</th>
               <th>Номер</th>
-              <th></th>
+              <!-- <th></th> -->
             </thead>
             {% for car in my_cars %}
             <tr>
@@ -97,7 +97,7 @@
               <td>{{ car.body_type }}</td>
               <td>{{ car.year }}</td>
               <td>{{ car.lecinse_plate }}</td>
-              <td><a href="#">Подробнее</a></td>
+              <!-- <td><a href="#">Подробнее</a></td> -->
             </tr>
             {% endfor %}
           </table>
