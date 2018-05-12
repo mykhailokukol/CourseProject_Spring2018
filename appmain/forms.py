@@ -52,7 +52,7 @@ class DeleteAccidentForm(forms.Form):
     accident = forms.ModelChoiceField(queryset=models.Accident.objects.values_list('type', flat=True), empty_label=None, label='Выберите тип ДТП')
 
 class SendEmailForm(forms.Form):
-    email = forms.CharField(label='Электронный адрес')
+    user = forms.ModelChoiceField(queryset=models.User.objects.all(), empty_label=None, label='Получатель')
     subject = forms.CharField(label='Тема')
     data = forms.CharField(widget=forms.Textarea, label='Сообщение')
 

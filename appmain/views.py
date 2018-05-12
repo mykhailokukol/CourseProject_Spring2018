@@ -83,7 +83,6 @@ def profile_settings(request):
                 car = request.POST.get('CarAdding-car')
                 sure = request.POST.get('CarAdding-sure')
                 car = models.Car.objects.filter(pk=car)[0]
-                print(car)
                 if sure:
                     car_model = models.Driver(car=car, human=request.user)
                     car_model.save()
@@ -138,10 +137,11 @@ def send_email(request):
     if request.method == 'POST':
         SendEmail = SendEmailForm(request.POST)
         if SendEmail.is_valid():
-            email = request.POST.get('email', 'mykhailokukol@gmail.com')
+            username = request.POST.get('user')
+            user = models.User.objects.filter(pk=username)[0]
             subject = request.POST.get('subject', '<Дефолтная тема письма>')
             data = request.POST.get('data', '<here should be some text>')
-            send_mail(email, data, 'kukol.dbcp.django@gmail.com', [email])
+            send_mail(user.email, data, 'kukol.dbcp.django@gmail.com', [user.email])
     else:
         SendEmail = SendEmailForm()
     return render(request, 'main/control/send_email.html', { 'SendEmailForm': SendEmail })
