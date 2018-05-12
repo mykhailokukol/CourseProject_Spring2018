@@ -75,6 +75,21 @@ class FixateViolationForm(forms.Form):
 class OwnerInfoForm(forms.Form):
     owner = forms.ModelChoiceField(queryset=models.User.objects.all(), empty_label=None, label='Владелец')
 
+# PROFILE SETTINGS FORMS. PS = PROFILE SETTINGS
+
+class PSChangingForm(forms.Form):
+    email = forms.EmailField(required=False)
+    birthday = forms.DateField(widget=forms.DateInput(), required=False)
+
+class PSAddCarForm(forms.Form):
+    car = forms.ModelChoiceField(queryset=models.Car.objects.all(), empty_label=None, label='Автомобиль')
+    sure = forms.BooleanField(widget=forms.CheckboxInput(), label='Это точно Ваше ТС?')
+
+class PSChangePhotoForm(forms.ModelForm):
+    class Meta:
+        model = models.Profile
+        fields = ('avatar', )
+
 
 
 

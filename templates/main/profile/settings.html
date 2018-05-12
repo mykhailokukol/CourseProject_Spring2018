@@ -11,23 +11,37 @@
   <body>
     <div class="content">
       {% if user.is_authenticated %}
-          <div class="information">
-            <div class="photo-info">
-              <img src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" alt="">
+          <div>
+            <div>
+              <img src="{% if user.profile.avatar.url != '' %}{{ user.profile.avatar.url }}{% endif %}" alt="">
               <h5>Зарегестрирован: {{ user.date_joined }}</h5>
+              <div class="cng-photo">
+                <form method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  {{ PhotoChangeForm.as_p }}
+                  <input type="submit" name="cng_photo" value="Обновить фото">
+                </form>
+              </div>
             </div>
-            <div class="main-info">
+            <div>
               <h2>{{ user.first_name }}
-                 {% for prof in profile %} {% if user_id == prof.user_id %} {{ prof.patronymic }} {% endif %} {% endfor %}
+                 {{ user.profile.patronymic }}
                  {{ user.last_name }}</h2>
               <p><strong>Номер ВУ:</strong> {{ user.username }}</p>
-              <p><strong>email:</strong><input style="margin: 2px; margin-left: 10px; width: 200px;" type="text" name="email_input" value="{{ user.email }}"></p>
-              <p><strong>Дата рождения:</strong>
-                {% for prof in profile %} {% if user_id == prof.user_id %} <input type="date" name="birthday" value="{{ prof.birthday }}"> {% endif %} {% endfor %} 
-              </p>
-              <a href="">Сохранить</a>
-              <a href="/profile/">Отмена</a>
+              <form method="post">
+                {% csrf_token %}
+                {{ ChangingForm.as_p }}
+                <input type="submit" name="cng_profile" value="Сохранить">
+                <a href="/profile/"><input type="button" name="cancel" value="Отмена"></a>
+              </form>
             </div>
+          </div>
+          <div class="add-car" style="margin-left: 50px;">
+            <form method="post">
+              {% csrf_token %}
+              {{ CarAddingForm.as_p }}
+              <input type="submit" name="addcar" value="Добавить">
+            </form>
           </div>
         </div>
       {% else %}

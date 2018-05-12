@@ -5,6 +5,7 @@ from .forms import *
 from . import models
 from django.conf import settings
 from django.core.mail import send_mail
+from django.core.files.storage import FileSystemStorage
 
 # AUTH PAGES VIEWS
 
@@ -75,7 +76,48 @@ def profile(request):
     })
 
 def profile_settings(request):
+    if request.method == 'POST':
+        if 'addcar' in request.POST:
+            PSAddCar = PSAddCarForm(request.POST, prefix='CarAdding')
+            if PSAddCar.is_valid():
+                car = request.POST.get('CarAdding-car')
+                sure = request.POST.get('CarAdding-sure')
+                car = models.Car.objects.filter(pk=car)[0]
+                print(car)
+                if sure:
+                    car_model = models.Driver(car=car, human=request.user)
+                    car_model.save()
+        elif 'cng_profile' in request.POST:
+            PSChanging = PSChangingForm(request.POST, prefix='Changing')
+            # Need to be fixed!
+            # if PSChanging.is_valid():
+            email = birthday = None
+            email = request.POST.get('Changing-email')
+            birthday = request.POST.get('Changing-birthday')
+            if not email:
+                models.Profile.objects.filter(pk=request.user.id).update(birthday=birthday)
+            elif not birthday:
+                models.User.objects.filter(pk=request.user.id).update(email=email)
+            else:
+                models.User.objects.filter(pk=request.user.id).update(email=email)
+                models.Profile.objects.filter(pk=request.user.id).update(birthday=birthday)
+    if request.method == 'POST' and request.FILES['Photo-avatar']:
+        if 'cng_photo' in request.POST:
+            PSChangePhoto = PSChangePhotoForm(request.POST, request.FILES, prefix='Photo')
+            print(PSChangePhoto)
+            # Need to be fixed
+            # if PSChangePhoto.is_valid():
+            # save to project
+            photo = request.FILES['Photo-avatar']
+            fs = FileSystemStorage()
+            filename = fs.save(photo.name, photo)
+            # save to db
+            avatar_path = filename
+            models.Profile.objects.filter(pk=request.user.id).update(avatar=avatar_path)
     return render(request, 'main/profile/settings.html', {
+        'PhotoChangeForm': PSChangePhotoForm(prefix='Photo'),
+        'CarAddingForm': PSAddCarForm(prefix='CarAdding'),
+        'ChangingForm': PSChangingForm(prefix='Changing'),
         'profile': models.Profile.objects.all(),
         'user_id': request.user.id,
         'accidents': models.FixationAccident.objects.all(),
@@ -184,6 +226,7 @@ def owners_info(request):
         OwnerInfo = OwnerInfoForm(request.POST)
         if OwnerInfo.is_valid():
             owner = OwnerInfo.cleaned_data['owner']
+            owner = owner.username
             accidents_query = models.Profile.objects.raw("select distinct 1 as id, acc.type, datetime, street, house from appmain_fixationaccident fixacc join auth_user au on au.username = '%s' join appmain_driver drv on drv.human_id = au.id join appmain_drivers drvs on drvs.driver_id = drv.id join appmain_fixationaccident_accident_type fat on fat.fixationaccident_id = fixacc.id join appmain_accident acc on acc.id = fat.accident_id" % (owner))
             acc_types = models.Accident.objects.all()
             violations_query = models.Profile.objects.raw("select distinct 1 as id, violation_id, datetime, street, house from appmain_drivingviolation dv join auth_user au on au.username = '%s' join appmain_driver drv on drv.human_id = au.id" % (owner))
