@@ -5,26 +5,28 @@
     <meta charset="utf-8">
     <title>Справочник ДТП</title>
     {% include 'public/fonts.html' %}
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="{% static 'css/control/vios_info.css' %}">
   </head>
   {% include 'public/header.html' %}
   <body>
     <div class="content">
-      <form method="post">
-        {% csrf_token %}
-        {{ AddAccidentForm.as_p }}
-        <input type="submit" name="add" value="Добавить">
-      </form>
-      <form method="post">
-        {% csrf_token %}
-        {{ ChangeAccidentForm.as_p }}
-        <input type="submit" name="change" value="Изменить">
-      </form>
-      <form method="post">
-        {% csrf_token %}
-        {{ DeleteAccidentForm.as_p }}
-        <input type="submit" name="delete" value="Удалить">
-      </form>
+      <div class="grid">
+        <form method="post" class="grid-item">
+          {% csrf_token %}
+          {{ AddAccidentForm.as_p }}
+          <input type="submit" name="add" value="Добавить" class="btn-success">
+        </form>
+        <form method="post" class="grid-item">
+          {% csrf_token %}
+          {{ ChangeAccidentForm.as_p }}
+          <input type="submit" name="change" value="Изменить" class="btn-success">
+        </form>
+        <form method="post" class="grid-item">
+          {% csrf_token %}
+          {{ DeleteAccidentForm.as_p }}
+          <input type="submit" name="delete" value="Удалить" class="btn-success">
+        </form>
+      </div>
     </div>
   </body>
 </html>

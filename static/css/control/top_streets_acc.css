@@ -1,0 +1,14 @@
+.content {
+  width: 98%;
+  text-align: center;
+  padding-top: 150px;
+}
+
+table, td, th, tr {
+  border: 1px solid black;
+}
+
+table {
+  width: 80%;
+  border-collapse: collapse;
+}

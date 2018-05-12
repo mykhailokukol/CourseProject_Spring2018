@@ -5,25 +5,22 @@
     <meta charset="utf-8">
     <title>Профиль</title>
     {% include 'public/fonts.html' %}
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
   </head>
   {% include 'public/header.html' %}
   <body>
-    <div class="content">
+    <div class="content" style="width: 98%;">
       {% if user.is_authenticated %}
-          <div>
-            <div>
-              <img src="{% if user.profile.avatar.url != '' %}{{ user.profile.avatar.url }}  {% else %} https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg {% endif %}" alt="">
-              <h5>Зарегестрирован: {{ user.date_joined }}</h5>
-              <div class="cng-photo">
-                <form method="post" enctype="multipart/form-data">
-                  {% csrf_token %}
-                  {{ PhotoChangeForm.as_p }}
-                  <input type="submit" name="cng_photo" value="Обновить фото">
-                </form>
-              </div>
+          <div class="cng-photo" style="margin-top: 25px; float: left; margin-left: 5%; background-color: #b8c0d6; text-align: center; padding: 20px;">
+            <img style="width: 200px; height: 200px;" src="{% if user.profile.avatar.url != '' %}{{ user.profile.avatar.url }}  {% else %} https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg {% endif %}" alt="">
+            <h5>Зарегестрирован: {{ user.date_joined }}</h5>
+            <div class="cng-photo-form">
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ PhotoChangeForm.as_p }}
+                <input type="submit" name="cng_photo" value="Обновить фото">
+              </form>
             </div>
-            <div>
+            <div class="cng-profile-info" style="position: absolute; margin-left: 50%; top: 0; background-color: #b8c0d6; text-align: center; margin-top: 25px; padding: 20px;">
               <h2>{{ user.first_name }}
                  {{ user.profile.patronymic }}
                  {{ user.last_name }}</h2>
@@ -36,7 +33,7 @@
               </form>
             </div>
           </div>
-          <div class="add-car" style="margin-left: 50px;">
+          <div class="add-car" style="position: absolute; margin-top: 30%; margin-left: 5%; background-color: #b8c0d6; text-align: center; padding: 20px;">
             <form method="post" enctype="multipart/form-data">
               {% csrf_token %}
               {{ CarAddingForm.as_p }}

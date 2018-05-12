@@ -5,20 +5,19 @@
     <meta charset="utf-8">
     <title>Топ улиц по нарушениям</title>
     {% include 'public/fonts.html' %}
-    <link rel="stylesheet" href="">
   </head>
   {% include 'public/header.html' %}
   <body>
-    <div class="content">
-      <table>
+    <div class="content" style="width: 98%; text-align: center; padding-top: 100px; margin-left: 10%;">
+      <table style="border-collapse: collapse; border: 1px solid black; width: 80%;">
         <thead>
-          <th>Улица</th>
-          <th>Количество нарушений</th>
+          <th style="border: 1px solid black;">Улица</th>
+          <th style="border: 1px solid black;">Количество нарушений</th>
         </thead>
         {% for q in query %}
-        <tr>
-          <td>{{ q.street }}</td>
-          <td>{{ q.cnt }}</td>
+        <tr style="border: 1px solid black;">
+          <td style="border: 1px solid black;">{{ q.street }}</td>
+          <td style="border: 1px solid black;">{{ q.cnt }}</td>
         </tr>
         {% endfor %}
       </table>

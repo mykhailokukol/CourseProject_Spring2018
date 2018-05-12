@@ -5,26 +5,28 @@
     <meta charset="utf-8">
     <title>Справочник нарушений</title>
     {% include 'public/fonts.html' %}
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="{% static 'css/control/vios_info.css' %}">
   </head>
   {% include 'public/header.html' %}
   <body>
     <div class="content">
-      <form method="post">
-        {% csrf_token %}
-        {{ AddViolationForm.as_p }}
-        <input type="submit" name="add" value="Добавить">
-      </form>
-      <form method="post">
-        {% csrf_token %}
-        {{ ChangeViolationForm.as_p }}
-        <input type="submit" name="change" value="Изменить">
-      </form>
-      <form method="post">
-        {% csrf_token %}
-        {{ DeleteViolationForm.as_p }}
-        <input type="submit" name="delete" value="Удалить">
-      </form>
+      <div class="grid">
+        <form method="post" class="grid-item">
+          {% csrf_token %}
+          {{ AddViolationForm.as_p }}
+          <input type="submit" name="add" value="Добавить" class="btn-success">
+        </form>
+        <form method="post" class="grid-item">
+          {% csrf_token %}
+          {{ ChangeViolationForm.as_p }}
+          <input type="submit" name="change" value="Изменить" class="btn-success">
+        </form>
+        <form method="post" class="grid-item">
+          {% csrf_token %}
+          {{ DeleteViolationForm.as_p }}
+          <input type="submit" name="delete" value="Удалить" class="btn-success">
+        </form>
+      </div>
     </div>
   </body>
 </html>

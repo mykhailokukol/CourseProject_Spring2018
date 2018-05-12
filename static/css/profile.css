@@ -63,3 +63,12 @@
   padding: 15px;
   border-collapse: collapse;
 }
+
+.cng-photo {
+  margin-top: 50px;
+}
+
+.cng-photo img {
+  height: 30px;
+  width: 30px;
+}

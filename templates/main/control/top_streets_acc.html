@@ -5,15 +5,15 @@
     <meta charset="utf-8">
     <title>Топ улиц по ДТП</title>
     {% include 'public/fonts.html' %}
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="{% static 'css/control/top_streets_acc.css' %}">
   </head>
   {% include 'public/header.html' %}
   <body>
-    <div class="content">
+    <div class="content" style="padding-top: 100px; width: 98%; margin-left: 10%;">
       <table>
         <thead>
           <th>Улица</th>
-          <td>Количество ДТП</td>
+          <th>Количество ДТП</th>
         </thead>
         {% for q in query %}
         <tr>
