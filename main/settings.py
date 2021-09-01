@@ -34,7 +34,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'kukol.dbcp.django@gmail.com'
-EMAIL_HOST_PASSWORD = '521467misha'
+EMAIL_HOST_PASSWORD = 'admin'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
@@ -94,7 +94,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'CourseProjectDjango',
         'USER' : 'kukol',
-        'PASSWORD' : '521467misha',
+        'PASSWORD' : 'admin',
         'HOST' : '',
         'PORT' : '5432',
     }
